@@ -37,10 +37,14 @@
 //+++++++++++++++++++++++++++++++++++++++++++++| MAIN |+++++++++++++++++++++++++++++++++++++++++++++++
 task main()
 {
+	//int waitcont = 0;
 	int topSpeedPercent = 40;
 	int topSpeedTurnPercent = 20;
 	SensorValue[pusher] = 0;
 	SensorValue[clamp] = 0;
+	int push_loop_count = 0;
+	bool push_active = false;
+
   while(1 == 1)
   {
   	//Cubic
@@ -102,13 +106,30 @@ task main()
 		}else if(vexRT[Btn6DXmtr2] || ((SensorValue[bumpLeft] == 0) && (SensorValue[bumpRight] == 0))){
 			SensorValue[clamp] = 0;
 		}
+
 		//The thing to push the cube
 		if(vexRT[Btn8UXmtr2]){
 	  	SensorValue[pusher] = 1;
-		}else if(vexRT[Btn8DXmtr2]  || vexRT[Btn8RXmtr2]){
+		}
+		else if(vexRT[Btn8DXmtr2]  || vexRT[Btn8RXmtr2]){
 			SensorValue[pusher] = 0;
 		}
 
-  }
+		if(vexRT[Btn8RXmtr2]){
+			push_active = true;
+		  push_loop_count =20000;
+		}
+
+		if(push_active){
+			if(push_loop_count == 0){
+				SensorValue[pusher] = 1;
+				push_active = false;
+			}else{
+				push_loop_count--;
+			}
+		}
 }
+}
+
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
